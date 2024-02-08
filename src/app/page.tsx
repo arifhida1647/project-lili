@@ -143,7 +143,7 @@ export default function Home() {
             <div className="p-2">
               <div className="max-w-sm bg-white border border-gray-200 rounded-lg shadow">
                 <a href="https://www.youtube.com/watch?v=v9XyIGXcRck" target="_blank">
-                  <iframe width="100%" height="150" src="https://www.youtube.com/embed/M5QY2_8704o" title="Chillstep Music for Programming / Cyber / Coding" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                  <iframe width="100%" height="150" src="https://www.youtube.com/embed/M5QY2_8704o" title="Chillstep Music for Programming / Cyber / Coding" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"></iframe>
                 </a>
                 <div className="p-3">
                   <a href="https://www.youtube.com/watch?v=v9XyIGXcRck" target="_blank">
@@ -157,7 +157,7 @@ export default function Home() {
             <div className="p-2">
               <div className="max-w-sm bg-white border border-gray-200 rounded-lg shadow">
                 <a href="https://www.youtube.com/watch?v=v9XyIGXcRck" target="_blank">
-                  <iframe width="100%" height="150" src="https://www.youtube.com/embed/M5QY2_8704o" title="Chillstep Music for Programming / Cyber / Coding" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                  <iframe width="100%" height="150" src="https://www.youtube.com/embed/M5QY2_8704o" title="Chillstep Music for Programming / Cyber / Coding" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"></iframe>
                 </a>
                 <div className="p-3">
                   <a href="https://www.youtube.com/watch?v=v9XyIGXcRck" target="_blank">
@@ -170,7 +170,7 @@ export default function Home() {
             <div className="p-2">
               <div className="max-w-sm bg-white border border-gray-200 rounded-lg shadow">
                 <a href="https://www.youtube.com/watch?v=v9XyIGXcRck" target="_blank">
-                  <iframe width="100%" height="150" src="https://www.youtube.com/embed/M5QY2_8704o" title="Chillstep Music for Programming / Cyber / Coding" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                  <iframe width="100%" height="150" src="https://www.youtube.com/embed/M5QY2_8704o" title="Chillstep Music for Programming / Cyber / Coding" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"></iframe>
                 </a>
                 <div className="p-3">
                   <a href="https://www.youtube.com/watch?v=v9XyIGXcRck" target="_blank">
