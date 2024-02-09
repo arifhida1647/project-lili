@@ -35,7 +35,7 @@ export default function Home() {
       </div>
       <div className="grid grid-cols-4 gap-2 px-2 items-center">
         <div className="flex items-center justify-center">
-          <Link href="" className="block max-w-sm w-full p-3  bg-green-500 border border-gray-200 rounded-lg shadow-xl hover:bg-green-600 ">
+          <Link href="/reminder" className="block max-w-sm w-full p-3  bg-green-500 border border-gray-200 rounded-lg shadow-xl hover:bg-green-600 ">
             <div className="flex items-center justify-center">
               <img src="iconreminder.svg" alt="" />
             </div>
@@ -76,7 +76,10 @@ export default function Home() {
         </div>
       </div>
       <div className='mt-12'>
-        <p className='font-semibold text-xl ms-5 mb-5'>Article</p>
+        <div className='flex'>
+          <p className='font-semibold text-xl ms-5 mb-5'>Article</p>
+          <Link href='/article' className='text-xs me-5 p-2 ml-auto bg-green-400 h-8 rounded-2xl text-white shadow hover:bg-green-600'>View All</Link>
+        </div>
         <Swiper
           slidesPerView={2}
           spaceBetween={10}
@@ -129,7 +132,10 @@ export default function Home() {
         </Swiper>
       </div>
       <div className='mt-12'>
+        <div className='flex'>
         <p className='font-semibold text-xl ms-5 mb-5'>Video</p>
+        <Link href='/video' className='text-xs me-5 p-2 ml-auto bg-green-400 h-8 rounded-2xl text-white shadow hover:bg-green-600'>View All</Link>
+        </div>
         <Swiper
           slidesPerView={2}
           spaceBetween={10}
