@@ -7,8 +7,16 @@ const DatePicker = dynamic(() => import('react-datepicker'), { ssr: false });
 import 'react-datepicker/dist/react-datepicker.css';
 import Link from 'next/link';
 
+interface Reminder {
+  id: number;
+  reminder: string;
+  time: string;
+  startDate?: string; // Tanda tanya (?) menandakan properti opsional
+  endDate?: string;   // Tanda tanya (?) menandakan properti opsional
+}
+
 const ReminderPage: React.FC = () => {
-  const [reminders, setReminders] = useState<{ id: number, reminder: string, time: string }[]>([]);
+  const [reminders, setReminders] = useState<Reminder[]>([]);
   const [newReminder, setNewReminder] = useState<string>('');
   const [scheduledDate, setScheduledDate] = useState<Date | null>(null);
   const [startDate, setStartDate] = useState<Date | null>(null); // Tanggal mulai
@@ -25,16 +33,18 @@ const ReminderPage: React.FC = () => {
     const storedReminders = localStorage.getItem('reminders');
     if (storedReminders) {
       setReminders(JSON.parse(storedReminders));
-      setIdCounter(Math.max(...JSON.parse(storedReminders).map((reminder: { id: number }) => reminder.id)) + 1);
+      setIdCounter(Math.max(...JSON.parse(storedReminders).map((reminder: Reminder) => reminder.id)) + 1);
     }
   }, []);
 
   const addReminder = () => {
     if (newReminder.trim() !== '' && scheduledDate) {
-      const newReminderObj = {
-        id: idCounter, reminder: newReminder, time: scheduledDate.toLocaleTimeString(),
+      const newReminderObj: Reminder = {
+        id: idCounter,
+        reminder: newReminder,
+        time: scheduledDate.toLocaleTimeString(),
         startDate: startDate?.toLocaleDateString(), // Menambahkan startDate ke dalam objek reminder
-        endDate: endDate?.toLocaleDateString()
+        endDate: endDate?.toLocaleDateString()    // Menambahkan endDate ke dalam objek reminder
       };
       const updatedReminders = [...reminders, newReminderObj];
       setReminders(updatedReminders);
@@ -48,10 +58,12 @@ const ReminderPage: React.FC = () => {
         let currentDate = new Date(startDate);
         while (currentDate <= endDate) {
           // Buat reminder untuk setiap hari pada jam yang sama
-          const reminderForDay = {
+          const reminderForDay: Reminder = {
             id: idCounter + 1,
             reminder: newReminder,
             time: scheduledDate.toLocaleTimeString(),
+            startDate: startDate?.toLocaleDateString(), // Menambahkan startDate ke dalam objek reminder
+            endDate: endDate?.toLocaleDateString()    // Menambahkan endDate ke dalam objek reminder
           };
           updatedReminders.push(reminderForDay);
           // Increment idCounter untuk setiap reminder baru
