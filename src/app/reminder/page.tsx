@@ -78,14 +78,16 @@ const ReminderPage: React.FC = () => {
           className="border-gray-300 border rounded-xl px-2 py-2 mb-2 mx-2"
         />
       </div>
-      <button className='my-5 py-3 px-5 mx-2 bg-green-500 rounded-2xl ' onClick={addReminder}>Add</button>
+      <button className='my-5 py-3 px-5 mx-2 bg-green-500 rounded-2xl text-white' onClick={addReminder}>Add</button>
       <div className="my-5 mx-2">
         <label htmlFor="delete-input" className="block mx-2 mb-2 text-sm font-medium text-gray-900">Enter reminder text to delete:</label>
         <div className='flex mx-2'>
           <input type="text"
             value={deleteInput}
             onChange={(e) => setDeleteInput(e.target.value)}
-            placeholder="" className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" />
+            placeholder="" className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-full p-2.5" />
+        </div>
+        <div className='flex mt-3'>
           <div>
             <button onClick={() => deleteReminder(deleteInput)} className="mx-2 py-3 px-5 bg-red-500 text-white rounded-lg">Delete</button>
           </div>
