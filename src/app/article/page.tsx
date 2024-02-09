@@ -10,7 +10,7 @@ export default function Article() {
                         <img src="iconprev.svg" />
                     </Link>
                 </div>
-                <div className='font-bold font-semibold text-green-500 pt-2'>Article</div>
+                <div className='font-bold text-3xl text-green-500 pt-1'>Article</div>
                 <div></div>
             </div>
             <div>

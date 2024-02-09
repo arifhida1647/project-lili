@@ -136,8 +136,8 @@ const ReminderPage: React.FC = () => {
       };
     };
   };
-  
-  
+
+
 
   const deleteAllReminders = () => {
     setReminders([]);
@@ -169,7 +169,7 @@ const ReminderPage: React.FC = () => {
             <img src="iconprev.svg" />
           </Link>
         </div>
-        <div className='font-bold font-semibold text-green-500 pt-2'>Reminder</div>
+        <div className='font-bold text-3xl text-green-500 pt-1'>Reminder</div>
         <div></div>
       </div>
       <div className="my-5 mx-2">
@@ -184,6 +184,7 @@ const ReminderPage: React.FC = () => {
           <button onClick={toggleModal} className="block mx-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">
             Add Reminder
           </button>
+
           <div>
             <button onClick={() => deleteReminder(deleteInput)} className="mx-2 py-3 px-5 bg-red-500 text-white rounded-lg">Delete</button>
           </div>
@@ -197,11 +198,17 @@ const ReminderPage: React.FC = () => {
           <div key={id}>
             <div className="max-w-sm p-6 bg-green-500 border border-gray-200 rounded-lg shadow-xl mx-5 my-5" >
               <a href="#">
-                <h5 className="mb-2 text-2xl font-bold tracking-tight text-white">{reminder}</h5>
+                <h5 className="mb-2 text-3xl font-mono font-bold tracking-tight text-white">{reminder}</h5>
               </a>
-              <p className="mb-1 font-normal text-white">Time: {time}</p>
-              <p className="mb-3 font-normal text-white">Start Date: {startDate}</p>
-              <p className="mb-3 font-normal text-white">End Date: {endDate}</p>
+              <div className='flex mt-5 mb-3'>
+                <img className='h-5 w-5 me-2' src="icontime.svg" alt="" />
+                <p className=" font-normal text-white">{time}</p>
+              </div>
+              <div className='flex'>
+                <img className='h-5 w-5 me-2' src="iconschedule.svg" alt="" />
+                <p className="mb-3 font-normal text-white">{startDate} - {endDate} </p>
+              </div>
+              
             </div>
           </div>
         ))}
