@@ -11,33 +11,61 @@ interface Reminder {
   id: number;
   reminder: string;
   time: string;
-  startDate?: string; // Tanda tanya (?) menandakan properti opsional
-  endDate?: string;   // Tanda tanya (?) menandakan properti opsional
+  startDate?: string;
+  endDate?: string;
 }
 
 const ReminderPage: React.FC = () => {
   const [reminders, setReminders] = useState<Reminder[]>([]);
   const [newReminder, setNewReminder] = useState<string>('');
   const [scheduledDate, setScheduledDate] = useState<Date | null>(null);
-  const [startDate, setStartDate] = useState<Date | null>(null); // Tanggal mulai
-  const [endDate, setEndDate] = useState<Date | null>(null); // Tanggal akhir
+  const [startDate, setStartDate] = useState<Date | null>(null);
+  const [endDate, setEndDate] = useState<Date | null>(null);
   const [idCounter, setIdCounter] = useState<number>(0);
   const [deleteInput, setDeleteInput] = useState<string>('');
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   useEffect(() => {
-    if (typeof window !== 'undefined') { // Periksa apakah sedang berjalan di lingkungan klien
-      if ('Notification' in window && Notification.permission !== 'granted') {
-        Notification.requestPermission();
+    const openRequest = indexedDB.open('reminders_db', 1);
+
+    openRequest.onupgradeneeded = function () {
+      const db = openRequest.result;
+      if (!db.objectStoreNames.contains('reminders')) {
+        db.createObjectStore('reminders', { keyPath: 'id' });
       }
-  
-      const storedReminders = localStorage.getItem('reminders');
-      if (storedReminders) {
-        setReminders(JSON.parse(storedReminders));
-        setIdCounter(Math.max(...JSON.parse(storedReminders).map((reminder: Reminder) => reminder.id)) + 1);
-      }
-    }
-  }, []);;
+    };
+
+    openRequest.onsuccess = function () {
+      const db = openRequest.result;
+      const transaction = db.transaction('reminders', 'readonly');
+      const objectStore = transaction.objectStore('reminders');
+      const getRequest = objectStore.getAll();
+
+      getRequest.onsuccess = function () {
+        setReminders(getRequest.result);
+        if (getRequest.result.length > 0) {
+          setIdCounter(
+            Math.max(
+              ...getRequest.result.map((reminder: Reminder) => reminder.id)
+            ) + 1
+          );
+        }
+      };
+    };
+  }, []);
+
+  const saveReminderToDB = (reminder: Reminder) => {
+    const openRequest = indexedDB.open('reminders_db', 1);
+    openRequest.onsuccess = function () {
+      const db = openRequest.result;
+      const transaction = db.transaction('reminders', 'readwrite');
+      const objectStore = transaction.objectStore('reminders');
+      const addRequest = objectStore.add(reminder);
+      addRequest.onsuccess = function () {
+        console.log('Reminder added to IndexedDB');
+      };
+    };
+  };
 
   const addReminder = () => {
     if (newReminder.trim() !== '' && scheduledDate) {
@@ -45,58 +73,74 @@ const ReminderPage: React.FC = () => {
         id: idCounter,
         reminder: newReminder,
         time: scheduledDate.toLocaleTimeString(),
-        startDate: startDate?.toLocaleDateString(), // Menambahkan startDate ke dalam objek reminder
-        endDate: endDate?.toLocaleDateString()    // Menambahkan endDate ke dalam objek reminder
+        startDate: startDate?.toLocaleDateString(),
+        endDate: endDate?.toLocaleDateString(),
       };
       const updatedReminders = [...reminders, newReminderObj];
       setReminders(updatedReminders);
-      localStorage.setItem('reminders', JSON.stringify(updatedReminders));
+      saveReminderToDB(newReminderObj);
       setNewReminder('');
       setScheduledDate(null);
       setIdCounter(prevId => prevId + 1);
 
-      // Jika tanggal mulai dan akhir diatur, tambahkan reminder untuk setiap hari di antara tanggal tersebut
       if (startDate && endDate) {
         let currentDate = new Date(startDate);
         while (currentDate <= endDate) {
-          // Buat reminder untuk setiap hari pada jam yang sama
           const reminderForDay: Reminder = {
             id: idCounter + 1,
             reminder: newReminder,
             time: scheduledDate.toLocaleTimeString(),
-            startDate: startDate?.toLocaleDateString(), // Menambahkan startDate ke dalam objek reminder
-            endDate: endDate?.toLocaleDateString()    // Menambahkan endDate ke dalam objek reminder
+            startDate: startDate?.toLocaleDateString(),
+            endDate: endDate?.toLocaleDateString(),
           };
           updatedReminders.push(reminderForDay);
-          // Increment idCounter untuk setiap reminder baru
           setIdCounter(prevId => prevId + 1);
-          // Tambahkan satu hari ke tanggal saat ini
           currentDate = addDays(currentDate, 1);
         }
       }
     }
   };
 
-  const deleteReminder = (reminder: string) => {
-    const updatedReminders = reminders.filter(rem => rem.reminder !== reminder);
+  const deleteReminder = (reminderId: number | string) => {
+    const idToDelete = typeof reminderId === 'string' ? parseInt(reminderId) : reminderId;
+    const updatedReminders = reminders.filter(
+      rem => rem.id !== idToDelete
+    );
     setReminders(updatedReminders);
-    localStorage.setItem('reminders', JSON.stringify(updatedReminders));
-    setDeleteInput(''); // Clear delete input field after deletion
+    const openRequest = indexedDB.open('reminders_db', 1);
+    openRequest.onsuccess = function () {
+      const db = openRequest.result;
+      const transaction = db.transaction('reminders', 'readwrite');
+      const objectStore = transaction.objectStore('reminders');
+      const deleteRequest = objectStore.delete(idToDelete);
+      deleteRequest.onsuccess = function () {
+        console.log('Reminder deleted from IndexedDB');
+      };
+    };
   };
+  
 
   const deleteAllReminders = () => {
     setReminders([]);
-    localStorage.removeItem('reminders');
+    const openRequest = indexedDB.open('reminders_db', 1);
+    openRequest.onsuccess = function () {
+      const db = openRequest.result;
+      const transaction = db.transaction('reminders', 'readwrite');
+      const objectStore = transaction.objectStore('reminders');
+      const clearRequest = objectStore.clear();
+      clearRequest.onsuccess = function () {
+        console.log('All reminders deleted from IndexedDB');
+      };
+    };
   };
 
-  // Function to toggle modal open/close
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
   };
+
   const toggleCloseModal = () => {
     setIsModalOpen(!isModalOpen);
   };
-
 
   return (
     <div>
@@ -118,7 +162,6 @@ const ReminderPage: React.FC = () => {
             placeholder="" className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-full p-2.5" />
         </div>
         <div className='flex mt-3'>
-          {/* <!-- Modal toggle --> */}
           <button onClick={toggleModal} className="block mx-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">
             Add Reminder
           </button>
@@ -145,8 +188,6 @@ const ReminderPage: React.FC = () => {
         ))}
 
       </div>
-
-      {/* <!-- Main modal --> */}
       <div id="default-modal" tabIndex={-1} aria-hidden="true" className={`${isModalOpen ? '' : 'hidden'} fixed inset-0 flex items-center justify-center bg-black bg-opacity-50`}>
         <div className="bg-white p-8 rounded-lg w-96">
           <h3 className="text-xl font-semibold text-gray-900">Add Reminder</h3>
@@ -159,9 +200,9 @@ const ReminderPage: React.FC = () => {
             selected={scheduledDate}
             onChange={(date: Date) => setScheduledDate(date)}
             showTimeSelect
-            showTimeSelectOnly // Menampilkan hanya bagian waktu
+            showTimeSelectOnly
             timeFormat="HH:mm"
-            dateFormat="h:mm aa" // Mengatur format waktu
+            dateFormat="h:mm aa"
             placeholderText="Select time"
             className="border-gray-300 border rounded-xl px-2 py-2 mb-2 mx-2"
           />
@@ -187,8 +228,6 @@ const ReminderPage: React.FC = () => {
           </div>
         </div>
       </div>
-
-
     </div>
   );
 };
