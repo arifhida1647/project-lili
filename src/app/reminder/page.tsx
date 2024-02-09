@@ -101,23 +101,42 @@ const ReminderPage: React.FC = () => {
     }
   };
 
-  const deleteReminder = (reminderId: number | string) => {
-    const idToDelete = typeof reminderId === 'string' ? parseInt(reminderId) : reminderId;
+  const deleteReminder = (reminderText: string) => {
     const updatedReminders = reminders.filter(
-      rem => rem.id !== idToDelete
+      rem => rem.reminder !== reminderText
     );
     setReminders(updatedReminders);
     const openRequest = indexedDB.open('reminders_db', 1);
-    openRequest.onsuccess = function () {
-      const db = openRequest.result;
+    openRequest.onsuccess = function (event) {
+      const request = event.target as IDBOpenDBRequest;
+      const db = request.result;
+      if (!db) {
+        console.error('Failed to open IndexedDB');
+        return;
+      }
       const transaction = db.transaction('reminders', 'readwrite');
       const objectStore = transaction.objectStore('reminders');
-      const deleteRequest = objectStore.delete(idToDelete);
-      deleteRequest.onsuccess = function () {
-        console.log('Reminder deleted from IndexedDB');
+      const requestCursor = objectStore.openCursor();
+      requestCursor.onsuccess = function (event) {
+        const cursor = (event.target as IDBRequest<IDBCursorWithValue>).result;
+        if (!cursor) {
+          console.error('Failed to open cursor');
+          return;
+        }
+        if (cursor.value.reminder === reminderText) {
+          const deleteRequest = cursor.delete();
+          deleteRequest.onsuccess = function () {
+            console.log('Reminder deleted from IndexedDB');
+          };
+          deleteRequest.onerror = function () {
+            console.error('Failed to delete reminder from IndexedDB');
+          };
+        }
+        cursor.continue();
       };
     };
   };
+  
   
 
   const deleteAllReminders = () => {
