@@ -100,6 +100,7 @@ const ReminderPage: React.FC = () => {
 
 
   return (
+    
     <div>
       <div className='flex justify-between px-5 py-5'>
         <div className='p-2 bg-green-500 rounded-xl '>
