@@ -11,14 +11,8 @@ const ReminderPage: React.FC = () => {
   const [reminders, setReminders] = useState<{ id: number, reminder: string, time: string }[]>([]);
   const [newReminder, setNewReminder] = useState<string>('');
   const [scheduledDate, setScheduledDate] = useState<Date | null>(null);
-  const [startDate, setStartDate] = useState<Date | null>(() => {
-    const storedStartDate = localStorage.getItem('startDate');
-    return storedStartDate ? new Date(storedStartDate) : null;
-  });
-  const [endDate, setEndDate] = useState<Date | null>(() => {
-    const storedEndDate = localStorage.getItem('endDate');
-    return storedEndDate ? new Date(storedEndDate) : null;
-  });
+  const [startDate, setStartDate] = useState<Date | null>(null); // Tanggal mulai
+  const [endDate, setEndDate] = useState<Date | null>(null); // Tanggal akhir
   const [idCounter, setIdCounter] = useState<number>(0);
   const [deleteInput, setDeleteInput] = useState<string>('');
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -35,22 +29,13 @@ const ReminderPage: React.FC = () => {
     }
   }, []);
 
-  useEffect(() => {
-    if (startDate) {
-      localStorage.setItem('startDate', startDate.toISOString());
-    }
-  }, [startDate]);
-
-  useEffect(() => {
-    if (endDate) {
-      localStorage.setItem('endDate', endDate.toISOString());
-    }
-  }, [endDate]);
-
-
   const addReminder = () => {
     if (newReminder.trim() !== '' && scheduledDate) {
-      const newReminderObj = { id: idCounter, reminder: newReminder, time: scheduledDate.toLocaleTimeString() };
+      const newReminderObj = {
+        id: idCounter, reminder: newReminder, time: scheduledDate.toLocaleTimeString(),
+        startDate: startDate?.toLocaleDateString(), // Menambahkan startDate ke dalam objek reminder
+        endDate: endDate?.toLocaleDateString()
+      };
       const updatedReminders = [...reminders, newReminderObj];
       setReminders(updatedReminders);
       localStorage.setItem('reminders', JSON.stringify(updatedReminders));
@@ -100,7 +85,6 @@ const ReminderPage: React.FC = () => {
 
 
   return (
-    
     <div>
       <div className='flex justify-between px-5 py-5'>
         <div className='p-2 bg-green-500 rounded-xl '>
@@ -133,23 +117,19 @@ const ReminderPage: React.FC = () => {
         </div>
       </div>
       <div className='my-5'>
-        {reminders.filter((reminder, index, self) => self.findIndex(r => r.reminder === reminder.reminder) === index).map(({ id, reminder, time }) => (
+        {reminders.filter((reminder, index, self) => self.findIndex(r => r.reminder === reminder.reminder) === index).map(({ id, reminder, time, startDate, endDate }) => (
           <div key={id}>
             <div className="max-w-sm p-6 bg-green-500 border border-gray-200 rounded-lg shadow-xl mx-5 my-5" >
               <a href="#">
-                <h5 className="mb-5 text-3xl font-bold font-serif tracking-tight text-white">{reminder}</h5>
+                <h5 className="mb-2 text-2xl font-bold tracking-tight text-white">{reminder}</h5>
               </a>
-              <div className='flex my-2'>
-                <img className='h-7 w-7 me-3' src="icontime.svg" alt="" />
-                <p className="mb-3 font-normal text-white">{time}</p>
-              </div>
-              <div className='flex '>
-                <img className='h-7 w-7 me-3' src="iconschedule.svg" alt="" />
-                <p className="mb-3 font-normal text-white">{startDate ? startDate.toLocaleDateString() : ''} - {endDate ? endDate.toLocaleDateString() : ''} </p>
-              </div>
+              <p className="mb-1 font-normal text-white">Time: {time}</p>
+              <p className="mb-3 font-normal text-white">Start Date: {startDate}</p>
+              <p className="mb-3 font-normal text-white">End Date: {endDate}</p>
             </div>
           </div>
         ))}
+
       </div>
 
       {/* <!-- Main modal --> */}
