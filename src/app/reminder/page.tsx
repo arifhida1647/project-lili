@@ -26,16 +26,18 @@ const ReminderPage: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   useEffect(() => {
-    if ('Notification' in window && Notification.permission !== 'granted') {
-      Notification.requestPermission();
+    if (typeof window !== 'undefined') { // Periksa apakah sedang berjalan di lingkungan klien
+      if ('Notification' in window && Notification.permission !== 'granted') {
+        Notification.requestPermission();
+      }
+  
+      const storedReminders = localStorage.getItem('reminders');
+      if (storedReminders) {
+        setReminders(JSON.parse(storedReminders));
+        setIdCounter(Math.max(...JSON.parse(storedReminders).map((reminder: Reminder) => reminder.id)) + 1);
+      }
     }
-
-    const storedReminders = localStorage.getItem('reminders');
-    if (storedReminders) {
-      setReminders(JSON.parse(storedReminders));
-      setIdCounter(Math.max(...JSON.parse(storedReminders).map((reminder: Reminder) => reminder.id)) + 1);
-    }
-  }, []);
+  }, []);;
 
   const addReminder = () => {
     if (newReminder.trim() !== '' && scheduledDate) {
