@@ -39,7 +39,7 @@ export default function Video() {
                 const articlesData: ArticleData[] = snapshot.docs.map(doc => ({
                     id: doc.id,
                     title: doc.data().tittle,
-                    link: doc.data().link.replace(/width="\d+"/, `width="${'100%'}"`).replace(/height="\d+"/, `height="${'200'}"`)
+                    link: doc.data().link.replace(/width="\d+"/, `width="${'100%'}"`).replace(/height="\d+"/, `height="${''}"`)
                 }));
                 setArticles(articlesData);
             } catch (error) {
