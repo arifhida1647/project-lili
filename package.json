@@ -11,6 +11,8 @@
   "dependencies": {
     "@ducanh2912/next-pwa": "^10.2.5",
     "@flaticon/flaticon-uicons": "^3.1.0",
+    "@types/firebase": "^3.2.1",
+    "firebase": "^10.8.0",
     "flowbite": "^2.2.1",
     "framer-motion": "^11.0.3",
     "fs": "^0.0.1-security",
@@ -20,6 +22,7 @@
     "react": "^18",
     "react-datepicker": "^6.1.0",
     "react-dom": "^18",
+    "react-youtube": "^10.1.0",
     "swiper": "^11.0.6"
   },
   "devDependencies": {
