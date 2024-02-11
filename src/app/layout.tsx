@@ -20,7 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className} style={{ maxWidth: '460px', margin: '0 auto' }}>
+      <body className={inter.className} style={{ maxWidth: '500px', margin: '0 auto' }}>
         {children}
 
         <div className="bg-green-900 mx-2 rounded-md mb-2">
