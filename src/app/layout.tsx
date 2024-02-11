@@ -59,6 +59,12 @@ export default function RootLayout({
             </div>
           </section>
         </div> */}
+        <div className="bg-green-900 mx-2 rounded-md mb-2">
+          <div className="px-5 py-5 text-white text-center" style={{fontSize: "8x"}}>
+            Powered By PBL KEL 6 FKM UMJ X UPT PUSKESMAS KAMPUNG SAWAH
+          </div>
+
+        </div>
       </body>
     </html>
   );

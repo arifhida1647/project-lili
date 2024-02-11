@@ -28,6 +28,7 @@ interface ArticleData {
   title: string;
   imageUrl: string;
   description: string;
+  updatedAt: Date;
   // Add other properties as needed
 }
 
@@ -81,7 +82,8 @@ export default function Home() {
           id: doc.id,
           title: doc.data().title,
           imageUrl: doc.data().imageUrl,
-          description: doc.data().description
+          description: doc.data().description,
+          updatedAt: doc.data().date.toDate()
         }));
         setArticles(articlesData);
       } catch (error) {
@@ -169,19 +171,20 @@ export default function Home() {
           {articles.map(article => (
             <SwiperSlide key={article.id}>
               <div className="p-2">
-                <div className="max-w-sm bg-white border border-gray-200 rounded-lg shadow ">
+                <div className="max-w-sm bg-white border border-gray-200 rounded-lg shadow">
                   <a href="#">
-                    <img className="rounded-t-lg" src={article.imageUrl} alt="" />
+                    <img className="rounded-t-lg h-24" src={article.imageUrl} alt="" />
                   </a>
                   <div className="p-3">
-                    <a href="#">
-                      <h5 className="mb-2 text-xl font-bold tracking-tight text-gray-900 ">{article.title}</h5>
-                      <p className="mb-3 text-xs text-gray-700">{article.description}</p>
+                    <a href="#" className="block">
+                      <h5 className="mb-2 text-xs font-bold tracking-tight text-gray-900">{article.title}</h5>
+                      <p className="mb-3 text-gray-700" style={{ fontSize: "10px", maxHeight: "3.6em", overflow: "hidden" }}>{article.updatedAt.toLocaleString()}</p>
                       <span className='p-2 text-xs bg-green-500 w-20 text-center shadow-xl text-white rounded-full'>Read</span>
                     </a>
                   </div>
                 </div>
               </div>
+
             </SwiperSlide>
           ))}
         </Swiper>

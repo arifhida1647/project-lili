@@ -10,6 +10,7 @@ interface ArticleData {
     title: string;
     imageUrl: string;
     description: string;
+    updatedAt: Date;
     // Add other properties as needed
 }
 
@@ -40,7 +41,8 @@ export default function Article() {
                     id: doc.id,
                     title: doc.data().title,
                     imageUrl: doc.data().imageUrl,
-                    description: doc.data().description
+                    description: doc.data().description,
+                    updatedAt: doc.data().date.toDate()
                 }));
                 setArticles(articlesData);
             } catch (error) {
@@ -69,9 +71,8 @@ export default function Article() {
                             <div>
                                 <img className="object-cover w-full rounded-t-lg h-25" src={article.imageUrl} alt="" />
                                 <div className="flex flex-col justify-between p-4 leading-normal">
-                                    <h5 className="mb-2 text-xl font-bold tracking-tight text-gray-900 ">{article.title}</h5>
-                                    <p className="mb-3 text-xs text-gray-700">{article.description}</p>
-                                    <span className='p-2 text-xs bg-green-500 w-20 text-center shadow-xl text-white rounded-full'>Read</span>
+                                    <p className="mb-2 text-xs font-bold tracking-tight text-gray-500 ">{article.updatedAt.toLocaleString()}</p>
+                                    <h5 className="mb-2 text-xl font-bold tracking-tight text-gray-900 ">{article.title}</h5>                                    <span className='p-2 text-xs bg-green-500 w-20 text-center shadow-xl text-white rounded-full'>Read</span>
                                 </div>
                             </div>
                         </div>
