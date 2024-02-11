@@ -30,6 +30,7 @@ const db = getFirestore(app);
 
 export default function Video() {
     const [articles, setArticles] = useState<ArticleData[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
         const fetchArticles = async () => {
@@ -39,9 +40,10 @@ export default function Video() {
                 const articlesData: ArticleData[] = snapshot.docs.map(doc => ({
                     id: doc.id,
                     title: doc.data().tittle,
-                    link: doc.data().link.replace(/width="\d+"/, `width="${'100%'}"`).replace(/height="\d+"/, `height="${''}"`)
+                    link: doc.data().link.replace(/width="\d+"/, 'width="100%"').replace(/height="\d+"/, 'height=""')
                 }));
                 setArticles(articlesData);
+                setLoading(false); // Set loading to false when data fetching is done
             } catch (error) {
                 console.error('Error fetching articles:', error);
             }
@@ -49,6 +51,7 @@ export default function Video() {
 
         fetchArticles();
     }, []);
+
     return (
         <>
             <div className='flex justify-between px-5 py-5'>
@@ -60,22 +63,28 @@ export default function Video() {
                 <div className='font-bold text-3xl text-green-500 pt-1'>Video</div>
                 <div></div>
             </div>
-            {articles.map(article => (
-                <div key={article.id}>
-                    <Link href="#" passHref>
-                        <div className="flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow-xl mx-6 mb-5">
-                            <div>
-                                <a className="mt-3" href="https://www.youtube.com/watch?v=v9XyIGXcRck" target="_blank">
-                                   <div dangerouslySetInnerHTML={{ __html: article.link }}></div>
-                                </a>
-                                <div className="flex flex-col justify-between p-4 leading-normal">
-                                    <h5 className="mb-2 text-xl font-bold tracking-tight text-gray-900 ">{article.title}</h5>
+            {loading ? (
+                <div className="flex justify-center items-center h-screen">
+                    <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-green-500"></div>
+                </div>
+            ) : (
+                articles.map(article => (
+                    <div key={article.id}>
+                        <Link href="#" passHref>
+                            <div className="flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow-xl mx-6 mb-5">
+                                <div>
+                                    <a className="mt-3" href="https://www.youtube.com/watch?v=v9XyIGXcRck" target="_blank">
+                                        <div dangerouslySetInnerHTML={{ __html: article.link }}></div>
+                                    </a>
+                                    <div className="flex flex-col justify-between p-4 leading-normal">
+                                        <h5 className="mb-2 text-xl font-bold tracking-tight text-gray-900 ">{article.title}</h5>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </Link>
-                </div>
-            ))}
+                        </Link>
+                    </div>
+                ))
+            )}
         </>
     );
 }
