@@ -49,11 +49,28 @@ const ReminderApp: React.FC = () => {
       .then((database: IDBDatabase) => {
         setDb(database);
         fetchReminders(database);
+        requestNotificationPermission(); // Meminta izin notifikasi saat komponen dimuat
       })
       .catch((error) => {
         console.error('Error opening database:', error);
       });
   }, []);
+
+  useEffect(() => {
+    if (db) {
+      reminders.forEach(reminder => {
+        sendNotification(reminder.title, reminder.date, reminder.time);
+      });
+    }
+  }, [reminders]);
+
+  const requestNotificationPermission = () => {
+    Notification.requestPermission().then(permission => {
+      if (permission !== 'granted') {
+        console.error('Permission denied for notifications');
+      }
+    });
+  };
 
   const fetchReminders = (database: IDBDatabase) => {
     const transaction = database.transaction(STORE_NAME, 'readonly');
@@ -86,7 +103,6 @@ const ReminderApp: React.FC = () => {
 
     addReminder.onsuccess = () => {
       setReminders([...reminders, initialReminder]);
-      sendNotification(title, date, time); // Panggil fungsi sendNotification setelah menambahkan pengingat
     };
 
     addReminder.onerror = (event) => {
@@ -107,7 +123,6 @@ const ReminderApp: React.FC = () => {
 
       addRepeatedReminder.onsuccess = () => {
         setReminders((prevReminders) => [...prevReminders, repeatedReminder]);
-        sendNotification(title, repeatedReminder.date, time); // Panggil fungsi sendNotification untuk pengingat berulang
       };
 
       addRepeatedReminder.onerror = (event) => {
@@ -148,13 +163,7 @@ const ReminderApp: React.FC = () => {
             body: `Reminder: ${title}`,
           });
         } else {
-          Notification.requestPermission().then(permission => {
-            if (permission === 'granted') {
-              new Notification('Reminder', {
-                body: `Reminder: ${title}`,
-              });
-            }
-          });
+          console.error('Permission denied for notifications');
         }
       }, scheduledTime - currentTime);
     }
