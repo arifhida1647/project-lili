@@ -66,7 +66,7 @@ const ReminderApp: React.FC = () => {
 
     getAllReminders.onerror = (event) => {
       if (event.target) {
-        console.error('Error fetching reminders:', event.target.error);
+        console.error('Error fetching reminders:');
       } else {
         console.error('Error fetching reminders: Unknown error occurred');
       }
@@ -90,7 +90,7 @@ const ReminderApp: React.FC = () => {
     };
 
     addReminder.onerror = (event) => {
-      console.error('Error adding reminder:', event.target.error);
+      console.error('Error adding reminder:');
     };
 
     // Process repeating reminders if repeatDays > 0
@@ -111,7 +111,7 @@ const ReminderApp: React.FC = () => {
       };
 
       addRepeatedReminder.onerror = (event) => {
-        console.error('Error adding repeated reminder:', event.target.error);
+        console.error('Error adding repeated reminder:');
       };
     }
 
@@ -133,7 +133,7 @@ const ReminderApp: React.FC = () => {
     };
 
     deleteReminder.onerror = (event) => {
-      console.error('Error deleting reminder:', event.target.error);
+      console.error('Error deleting reminder:');
     };
   };
 
