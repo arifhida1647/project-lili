@@ -9,20 +9,24 @@ const Home: React.FC = () => {
   }, []);
 
   const checkNotificationPermission = async () => {
-    const permission = await Notification.requestPermission();
-    setNotificationPermission(permission);
+    if ('Notification' in window) {
+      const permission = await Notification.requestPermission();
+      setNotificationPermission(permission);
+    }
   };
 
   const scheduleNotification = () => {
-    if (notificationPermission === 'granted') {
+    if ('Notification' in window && notificationPermission === 'granted') {
       const title = 'Reminder';
       const options: NotificationOptions = {
         body: 'Ini adalah notifikasi reminder!',
         icon: '/favicon.ico'
       };
       new Notification(title, options);
+    } else if ('Notification' in window && notificationPermission !== 'granted') {
+      alert('Anda belum mengizinkan notifikasi pada peramban Anda.');
     } else {
-      alert('Izin notifikasi belum diizinkan!');
+      alert('Peramban Anda tidak mendukung notifikasi.');
     }
   };
 
