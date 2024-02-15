@@ -1,32 +1,52 @@
 'use client'
-import React from 'react';
-import { Resend } from 'resend';
+import { useState } from 'react';
 
-const IndexPage: React.FC = () => {
-  const handleClick = async () => {
-    const resend = new Resend('re_fVWFZ9yS_Lwz2CBjBuepnib7oaLmTxo5M');
+const SendEmail = () => {
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
-    try {
-      await resend.emails.send({
-        from: 'onboarding@resend.dev',
-        to: 'arifhida1647@gmail.com',
-        subject: 'Hello World',
-        html: '<p>Congrats on sending your <strong>first email</strong>!</p>'
-      });
+    const sendEmail = async () => {
+        try {
+            setLoading(true);
+            setError(null);
 
-      alert('Email sent successfully!');
-    } catch (error) {
-      console.error('Error sending email:', error);
-      alert('Failed to send email. Please try again later.');
-    }
-  };
+            const data = {
+                email: "arifhida1647@gmail.com",
+                userFristname: "Arif"
+            };
 
-  return (
-    <div>
-      <h1>Welcome to Next.js with Email Sending!</h1>
-      <button onClick={handleClick}>Send Email</button>
-    </div>
-  );
+            const requestOptions = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            };
+
+            const response = await fetch('https://api-email-teal.vercel.app/api/mail', requestOptions);
+
+            if (!response.ok) {
+                throw new Error('Failed to send email');
+            }
+
+            setLoading(false);
+            alert('Email sent successfully!');
+        } catch (error) {
+            setLoading(false);
+            setError('Failed to send email. Please try again later.');
+            console.error('Error sending email:', error);
+        }
+    };
+
+    return (
+        <div>
+            <h1>Send Email</h1>
+            <button onClick={sendEmail} disabled={loading}>
+                {loading ? 'Sending...' : 'Send Email'}
+            </button>
+            {error && <p style={{ color: 'red' }}>{error}</p>}
+        </div>
+    );
 };
 
-export default IndexPage;
+export default SendEmail;
