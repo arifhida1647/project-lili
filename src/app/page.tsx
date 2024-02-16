@@ -114,7 +114,7 @@ export default function Home() {
       </div>
       <div className="grid grid-cols-4 gap-2 px-2 items-center">
         <div className="flex items-center justify-center">
-          <Link href="/reminder" className="block max-w-sm w-full p-3  bg-green-500 border border-gray-200 rounded-lg shadow-xl hover:bg-green-600 ">
+          <Link href="/test" className="block max-w-sm w-full p-3  bg-green-500 border border-gray-200 rounded-lg shadow-xl hover:bg-green-600 ">
             <div className="flex items-center justify-center">
               <img src="iconreminder.svg" alt="" />
             </div>
