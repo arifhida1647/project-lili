@@ -72,16 +72,16 @@ const IndexPage = () => {
     }
     setIsLoading(true);
     try {
-      const cron_expression = `${cronMinute} ${cronHour} * * *`;
       const data = {
-        token: '8715e02850fc5298cb8115e29be384cf',
-        cron_expression: cron_expression,
-        url: `https://temp-ten-lilac.vercel.app/home?to=${fromEmail}&subject=${fromSubject}&text=reminder`,
-        cron_job_name: fromSubject
+        job: {
+          url: `https://temp-ten-lilac.vercel.app/home?to=${fromEmail}&subject=${fromSubject}&text=reminder`,
+          hoursTime: cronHour,
+          minutesTime: cronMinute
+        }
       };
 
-      const response = await fetch('https://server-temp.vercel.app/home/create-job', {
-        method: 'POST',
+      const response = await fetch('https://server-temp.vercel.app/home/update-job', {
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
         },
@@ -89,10 +89,11 @@ const IndexPage = () => {
       });
 
       const jsonData = await response.json();
+      
       console.log(jsonData);
 
       saveCronJob({
-        cron_job_id: jsonData.cron_job_id,
+        cron_job_id: jsonData.jobId,
         fromSubject,
         cronHour,
         cronMinute
