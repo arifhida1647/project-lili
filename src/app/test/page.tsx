@@ -155,7 +155,7 @@ const IndexPage = () => {
           />
         </div>
         <div className="mb-6">
-          <label className="block text-gray-700 text-sm font-bold mb-2">Subject:</label>
+          <label className="block text-gray-700 text-sm font-bold mb-2">Nama Obat:</label>
           <input required type="text" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" value={fromSubject} onChange={(e) => setSubject(e.target.value)} />
         </div>
         <div className="flex items-center mb-4">
@@ -175,16 +175,16 @@ const IndexPage = () => {
         <input type="text" placeholder="" className="me-2 shadow appearance-none border rounded w-48 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" value={deleteCronJobId} onChange={(e) => setDeleteCronJobId(e.target.value)} />
         <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" onClick={handleDeleteJob}>Delete</button>
         <div className="mt-9">
-          <p className="text-gray-700 text-sm font-bold mb-2">Daftar Cron Jobs:</p>
+          <div className='flex'>
+          <svg className="w-6 h-6 text-gray-800 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+            <path fill-rule="evenodd" d="M12.5 8.7a2.5 2.5 0 0 1 3.5 0 2.5 2.5 0 0 1 0 3.5l-1.1 1a1 1 0 0 0-.2-.2l-3-3-.3-.2 1.1-1Zm-2.4 2.5L7.3 14a1 1 0 0 0-.3.7v2c0 .6.4 1 1 1h2c.3 0 .5 0 .7-.3l2.8-2.8-.2-.2-3-3-.2-.2Z" clip-rule="evenodd" />
+            <path fill-rule="evenodd" d="M7 3c.6 0 1 .4 1 1v1h3V4a1 1 0 1 1 2 0v1h3V4a1 1 0 1 1 2 0v1h1a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7c0-1.1.9-2 2-2h1V4c0-.6.4-1 1-1Zm10.7 8H19v8H5v-8h3.9l.5-.5c.2-.3.5-.4.9-.3 0 0 .2.1.2 0V10a1 1 0 0 1 .2-.9l1.1-1a3.5 3.5 0 0 1 4.9 0 3.5 3.5 0 0 1 1 2.9Z" clip-rule="evenodd" />
+          </svg>
+          <p className="mt-1text-gray-700 text-sm font-bold mb-2">Daftar Reminder:</p>
+          </div>
           <ul>
-
-
             {cronJobs.map((cronJob) => (
               <li key={cronJob.cron_job_id} className="text-gray-700 text-sm flex">
-                <svg className="w-6 h-6 text-gray-800 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
-                  <path fill-rule="evenodd" d="M12.5 8.7a2.5 2.5 0 0 1 3.5 0 2.5 2.5 0 0 1 0 3.5l-1.1 1a1 1 0 0 0-.2-.2l-3-3-.3-.2 1.1-1Zm-2.4 2.5L7.3 14a1 1 0 0 0-.3.7v2c0 .6.4 1 1 1h2c.3 0 .5 0 .7-.3l2.8-2.8-.2-.2-3-3-.2-.2Z" clip-rule="evenodd" />
-                  <path fill-rule="evenodd" d="M7 3c.6 0 1 .4 1 1v1h3V4a1 1 0 1 1 2 0v1h3V4a1 1 0 1 1 2 0v1h1a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7c0-1.1.9-2 2-2h1V4c0-.6.4-1 1-1Zm10.7 8H19v8H5v-8h3.9l.5-.5c.2-.3.5-.4.9-.3 0 0 .2.1.2 0V10a1 1 0 0 1 .2-.9l1.1-1a3.5 3.5 0 0 1 4.9 0 3.5 3.5 0 0 1 1 2.9Z" clip-rule="evenodd" />
-                </svg>
                 {cronJob.cron_job_id} - {cronJob.fromSubject} - {cronJob.cronHour.padStart(2, '0')}.{cronJob.cronMinute.padStart(2, '0')}
               </li>
             ))}
