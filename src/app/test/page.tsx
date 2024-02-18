@@ -189,12 +189,11 @@ const IndexPage = () => {
           </div>
           <ol>
             {cronJobs.map((cronJob) => (
-              <li key={cronJob.cron_job_id} className="text-gray-700 text-sm flex mb-3">
+              <li key={cronJob.cron_job_id} className="text-gray-700 text-sm flex justify-between mb-3">
                 ID: {cronJob.cron_job_id} <br />
                 Nama Obat: {cronJob.fromSubject} <br />
                 Jam: {cronJob.cronHour.padStart(2, '0')}.{cronJob.cronMinute.padStart(2, '0')}
-                <button className="bg-red-500 me-2 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" onClick={() => handleDeleteCronJob(cronJob.cron_job_id)}>Hapus</button>
-                <hr className="h-px my-8 bg-gray-600 border-4"></hr>
+                <button className="bg-red-500 mx-2 hover:bg-red-700 text-white font-bold py-2 px-2 rounded focus:outline-none focus:shadow-outline" onClick={() => handleDeleteCronJob(cronJob.cron_job_id)}>Hapus</button>
               </li>
             ))}
           </ol>
