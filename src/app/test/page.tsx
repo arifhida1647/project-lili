@@ -89,7 +89,7 @@ const IndexPage = () => {
       });
 
       const jsonData = await response.json();
-      
+
       console.log(jsonData);
 
       saveCronJob({
@@ -106,6 +106,21 @@ const IndexPage = () => {
     }
   };
 
+  const handleDeleteCronJob = async (cronJobId: string) => {
+    try {
+      const response = await fetch(`https://server-temp.vercel.app/home/delete/${cronJobId}`,{
+        method: 'delete',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      const db = await openDB<MyDB>('my-db', 1);
+      await db.delete('settings', cronJobId);
+      setCronJobs(cronJobs.filter(job => job.cron_job_id !== cronJobId));
+    } catch (error) {
+      console.error('Error deleting cron job from IndexedDB:', error);
+    }
+  };
 
   const handleDeleteAll = async () => {
     try {
@@ -117,26 +132,7 @@ const IndexPage = () => {
     }
   };
 
-  const handleDeleteJob = async () => {
-    try {
-      const response = await fetch(`https://server-temp.vercel.app/home/delete-job?token=8715e02850fc5298cb8115e29be384cf&id=${deleteCronJobId}`, {
-        method: 'GET'
-      });
-
-      if (response.ok) {
-        const db = await openDB<MyDB>('my-db', 1);
-        await db.delete('settings', deleteCronJobId);
-        loadCronJobs();
-      } else {
-        console.error('Failed to delete cron job');
-      }
-    } catch (error) {
-      console.error('Error deleting cron job:', error);
-    }
-  };
-
   return (
-
     <div className="max-w-md mx-auto mt-8">
       <div className='flex justify-between px-5 py-5'>
         <div className='p-2 bg-green-500 rounded-xl '>
@@ -183,16 +179,13 @@ const IndexPage = () => {
             <button className="bg-blue-500 me-2 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" onClick={handleTestClick}>Add</button>
           )}
         </div>
-        <label className="block text-gray-700 text-sm font-bold mb-2">Cron Job ID:</label>
-        <input type="text" placeholder="" className="me-2 shadow appearance-none border rounded w-48 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" value={deleteCronJobId} onChange={(e) => setDeleteCronJobId(e.target.value)} />
-        <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" onClick={handleDeleteJob}>Delete</button>
         <div className="mt-9">
           <div className='flex'>
             <svg className="w-6 h-6 text-gray-800 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
               <path fill-rule="evenodd" d="M12.5 8.7a2.5 2.5 0 0 1 3.5 0 2.5 2.5 0 0 1 0 3.5l-1.1 1a1 1 0 0 0-.2-.2l-3-3-.3-.2 1.1-1Zm-2.4 2.5L7.3 14a1 1 0 0 0-.3.7v2c0 .6.4 1 1 1h2c.3 0 .5 0 .7-.3l2.8-2.8-.2-.2-3-3-.2-.2Z" clip-rule="evenodd" />
               <path fill-rule="evenodd" d="M7 3c.6 0 1 .4 1 1v1h3V4a1 1 0 1 1 2 0v1h3V4a1 1 0 1 1 2 0v1h1a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7c0-1.1.9-2 2-2h1V4c0-.6.4-1 1-1Zm10.7 8H19v8H5v-8h3.9l.5-.5c.2-.3.5-.4.9-.3 0 0 .2.1.2 0V10a1 1 0 0 1 .2-.9l1.1-1a3.5 3.5 0 0 1 4.9 0 3.5 3.5 0 0 1 1 2.9Z" clip-rule="evenodd" />
             </svg>
-            <p className="mt-1text-gray-700 text-sm font-bold mb-3">Daftar Reminder:</p>
+            <p className="mt-1 text-gray-700 text-sm font-bold mb-3">Daftar Reminder:</p>
           </div>
           <ol>
             {cronJobs.map((cronJob) => (
@@ -200,6 +193,7 @@ const IndexPage = () => {
                 ID: {cronJob.cron_job_id} <br />
                 Nama Obat: {cronJob.fromSubject} <br />
                 Jam: {cronJob.cronHour.padStart(2, '0')}.{cronJob.cronMinute.padStart(2, '0')}
+                <button className="bg-red-500 me-2 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" onClick={() => handleDeleteCronJob(cronJob.cron_job_id)}>Hapus</button>
                 <hr className="h-px my-8 bg-gray-600 border-4"></hr>
               </li>
             ))}
